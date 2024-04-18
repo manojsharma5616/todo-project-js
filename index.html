@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+
+    .container {
+        background-color: rgb(197, 189, 156);
+        min-height: 100vh;
+    }
+
+    .todo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        max-width: 90%;
+        margin: 0px auto;
+        background-color: white;
+        padding: 10px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        min-width: 70%;
+    }
+    .button-list{
+        display: flex;
+        justify-content: space-around;
+        min-width: 70%;
+    }
+    button {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 90%;
+        margin: 10px auto;
+        background-color: rgb(142, 168, 168);
+        padding: 5px 15px;
+    }
+
+    .list-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .delete {
+        background-color: rgb(196, 94, 94);
+        cursor: pointer;
+        padding: 5px 15px;
+        font-size: 15px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <form class="todo">
+            <h1>TO-DO List</h1>
+            <input type="text" placeholder="Enter title" id="title">
+            <input type="text" placeholder="Enter description" id="description">
+            <div class="button-list">
+                <button type="submit" id="submit">Add ToDo List</button>
+                <button type="button" id="clear">Clear ToDo List</button>
+            </div>
+        </form>
+        <!-- <div class="list">
+            <div class="list-item">
+                <h3 class="list-heading">Manoj</h3>
+                <p class="list-para">hello</p>
+            </div>
+            <button class="delete">-</button>
+        </div> -->
+    </div>
+</body>
+<script>
+    const title = document.getElementById("title");
+    const description = document.getElementById("description");
+    const form = document.querySelector("form");
+    const container = document.querySelector(".container");
+    const all_list = document.createElement("div");
+    const clear = document.getElementById("clear");
+
+    // const tasks=[];
+    const tasks=localStorage.getItem("tasks")?JSON.parse(localStorage.getItem("tasks")):[];
+    console.log(tasks);
+    showList();
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if(title.value===""){
+            return
+        }
+        removeTasks();
+        tasks.push({
+            title:title.value,
+            description:description.value
+        });
+        localStorage.setItem("tasks",JSON.stringify(tasks));
+        console.log(tasks);
+        showList();
+    });
+    clear.addEventListener("click",()=>{
+      tasks.forEach((value,index)=>{
+        removeTasks();
+        tasks.splice(index,tasks.length);
+        localStorage.setItem("tasks",JSON.stringify(tasks));
+      })
+})
+    function showList () {
+        tasks.forEach((value,index)=>{
+        const div = document.createElement("div");
+        const list_item = document.createElement("div");
+        const list_heading = document.createElement("h3");
+        const list_para = document.createElement("p");
+        const list_delete = document.createElement("button");
+        const clear = document.getElementById("clear");
+        div.setAttribute("class", "list");
+        list_item.setAttribute("class", "list-item");
+        list_heading.setAttribute("class", "list-heading");
+        list_heading.setAttribute("class", "list-para");
+        list_delete.setAttribute("class", "delete");
+
+        container.append(all_list);
+        all_list.append(div);
+        div.append(list_item);
+        list_item.append(list_heading);
+        list_item.append(list_para);
+        div.append(list_delete);
+       
+        list_delete.innerText = "-";
+        list_heading.innerText = value.title;
+        list_para.innerText = value.description;
+
+        list_delete.addEventListener("click",()=>{
+            removeTasks();
+            tasks.splice(index,1);
+            localStorage.setItem("tasks",JSON.stringify(tasks));
+            showList();
+        })
+
+
+     })
+    }
+    function removeTasks(){
+        tasks.forEach(()=>{
+            const div=document.querySelector(".list");
+            div.remove();
+        })
+    }
+</script>
+
+
+<script>
+//     const submit = document.getElementById("submit");
+//     const clear = document.getElementById("clear");
+//     const all_list = document.createElement("div");
+//    clear.addEventListener("click",()=>{
+//         while (all_list.hasChildNodes()){
+//             all_list.removeChild(all_list.firstChild);
+//         }
+//     })
+//     submit.addEventListener("click", (e) => {
+//         e.preventDefault();
+//         const title = document.querySelector("#title").value;
+//         const description = document.querySelector("#description").value;
+//         if(title===""){
+//             return;
+//         } 
+//         if(description===""){
+//             return;
+//         }
+//         showList();
+//     });
+//     const showList = () => {
+//         const title = document.querySelector("#title").value;
+//         const description = document.querySelector("#description").value;
+
+//         const container = document.querySelector(".container");
+//         const list = document.createElement("div");
+//         const list_item = document.createElement("div");
+//         const list_heading = document.createElement("h3");
+//         const list_para = document.createElement("p");
+//         const list_delete = document.createElement("button");
+//         list.setAttribute("class", "list");
+//         list_item.setAttribute("class", "list-item");
+//         list_heading.setAttribute("class", "list-heading");
+//         list_heading.setAttribute("class", "list-para");
+//         list_delete.setAttribute("class", "delete");
+
+//         container.append(all_list);
+//         all_list.append(list);
+//         list.append(list_item);
+//         list_item.append(list_heading);
+//         list_item.append(list_para);
+//         list.append(list_delete);
+       
+//         list_delete.innerText = "-";
+//         list_heading.innerText = title;
+//         list_para.innerText = description;
+
+//         list_delete.addEventListener("click",()=>{
+//             list.remove();
+//         })
+//     }
+</script>
+
+</html>
